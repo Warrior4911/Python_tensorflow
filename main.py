@@ -1,21 +1,21 @@
-import cv2
+import cv2 as cv
 import numpy as np
 
-# Define named constants for magic numbers
+# Power of frames and binary is defined
 FRAME_DIFFERENCE = 15000
 BINARY_THRESHOLD = 25
 
 def is_frame_stable(frame1: np.ndarray, frame2: np.ndarray, threshold: int = FRAME_DIFFERENCE):
 
-    # Convert the frames to grayscale
-    gray1 = cv2.cvtColor(frame1, cv2.COLOR_BGR2GRAY)
-    gray2 = cv2.cvtColor(frame2, cv2.COLOR_BGR2GRAY)
+    # raw to grayscale
+    gray1 = cv.cvtColor(frame1, cv.COLOR_BGR2GRAY)
+    gray2 = cv.cvtColor(frame2, cv.COLOR_BGR2GRAY)
 
     # Compute absolute difference between frames
-    diff = cv2.absdiff(gray1, gray2)
+    diff = cv.absdiff(gray1, gray2)
 
     # Apply a binary threshold to get binary image
-    _, diff = cv2.threshold(diff, BINARY_THRESHOLD, 255, cv2.THRESH_BINARY)
+    _, diff = cv.threshold(diff, BINARY_THRESHOLD, 255, cv.THRESH_BINARY)
 
     # Calculate the number of non-zero (white) pixels in the difference image
     count_non_zero = np.count_nonzero(diff)
@@ -29,7 +29,7 @@ def process_video(input_path: str, output_path: str, frame_difference_threshold:
 
     try:
         # Open the video file
-        cap = cv2.VideoCapture("Source_Video/raw_input_video.mp4")
+        cap = cv.VideoCapture("Source_Video/raw_input_video.mp4")
         
         # Check if video opened successfully
         if not cap.isOpened():
@@ -37,13 +37,13 @@ def process_video(input_path: str, output_path: str, frame_difference_threshold:
             return
         
         # Get the width, height, and FPS of the video
-        width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-        height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        fps = int(cap.get(cv2.CAP_PROP_FPS))
+        width = int(cap.get(cv.CAP_PROP_FRAME_WIDTH))
+        height = int(cap.get(cv.CAP_PROP_FRAME_HEIGHT))
+        fps = int(cap.get(cv.CAP_PROP_FPS))
         
         # Define the codec and create a VideoWriter object to write the output video
-        fourcc = cv2.VideoWriter.fourcc(*'XVID')
-        out = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
+        fourcc = cv.VideoWriter.fourcc(*'XVID')
+        out = cv .VideoWriter(output_path, fourcc, fps, (width, height))
         
         # Read the first frame
         success, prev_frame = cap.read()
